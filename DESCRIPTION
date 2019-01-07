@@ -1,7 +1,7 @@
 Package: tbrf
 Type: Package
 Title: Time-Based Rolling Functions
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Michael", "Schramm", role=c("aut", "cre"),
       email = "michael.schramm@ag.tamu.edu",
@@ -22,8 +22,8 @@ Imports: boot, dplyr, lubridate, purrr, rlang, tibble, tidyr
 Suggests: covr, ggalt, ggplot2, testthat, knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2018-08-31 21:44:30 UTC; michael.schramm
+Packaged: 2019-01-04 21:14:23 UTC; michael.schramm
 Author: Michael Schramm [aut, cre] (<https://orcid.org/0000-0003-1876-6592>),
   Frank Harrell [ctb]
 Repository: CRAN
-Date/Publication: 2018-09-03 13:30:03 UTC
+Date/Publication: 2019-01-07 20:50:03 UTC
