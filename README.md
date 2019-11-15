@@ -31,7 +31,7 @@ samples collected in the previous 7-years. tbrf can be used to display
 regulatory status at any sample point.
 
 tbrf identifies the previous n measurements within the specified time
-window, applies the function, and outputs a varaible with the result of
+window, applies the function, and outputs a variable with the result of
 the rolling statistical measure.
 
 ## Installation
@@ -72,7 +72,7 @@ See:
 
 ## Example
 
-Plot a rolling 6-hour geometric mean
+Plot a rolling 1-hour mean:
 
 ``` r
 library(tbrf)
@@ -80,28 +80,39 @@ library(dplyr)
 library(ggplot2)
 library(ggalt)
 
-y <- -100*log(runif(50))
+y = 3 * sin(2 * seq(from = 0, to = 4*pi, length.out = 100)) + rnorm(100)
 time = sample(seq(as.POSIXct(strptime("2017-01-01 00:01:00", "%Y-%m-%d %H:%M:%S")),
-                  as.POSIXct(strptime("2017-01-03 23:00:00", "%Y-%m-%d %H:%M:%S")),
-                  by = "min"), 50)
+                  as.POSIXct(strptime("2017-01-01 23:00:00", "%Y-%m-%d %H:%M:%S")),
+                  by = "min"), 100)
 
-df <- tibble(time, y)
+df <- data_frame(y, time)
 
-df %>% 
-  tbr_gmean(y, time, unit = "hours", n = 6, conf = 0.95, type = "perc") %>%
+df %>%
+  tbr_mean(y, time, "hours", n = 1) %>%
   ggplot() +
   geom_point(aes(time, y)) +
-  geom_step(aes(time, mean)) +
-  geom_ribbon(aes(time, ymin = lwr_ci, ymax = upr_ci), alpha = 0.5, stat = "stepribbon")
+  geom_step(aes(time, mean))
 ```
 
-<img src="man/figures/README-tbr_misc-1.png" width="672" />
+<img src="man/figures/README-tbr_hour-1.png" width="672" />
+
+Plot a rolling 3-hour mean:
+
+``` r
+df %>%
+  tbr_mean(y, time, "hours", n = 3) %>%
+  ggplot() +
+  geom_point(aes(time, y)) +
+  geom_step(aes(time, mean))
+```
+
+<img src="man/figures/README-tbr_threehour-1.png" width="672" />
 
 ## Contributing
 
 Please note that this project is released with a [Contributor Code of
-Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree
-to abide by its terms.
+Conduct](https://github.com/mps9506/tbrf/blob/master/CODE_OF_CONDUCT.md).
+By participating in this project you agree to abide by its terms.
 
 ## License
 
@@ -116,59 +127,39 @@ Frank Harrell’s [`Hmisc`](https://github.com/harrelfe/Hmisc) package.
 library(tbrf)
 
 date()
-## [1] "Fri Feb 01 10:30:23 2019"
+## [1] "Fri Nov 15 14:34:08 2019"
 
 devtools::test()
-## v | OK F W S | Context
+## v |  OK F W S | Context
 ## 
-/ |  0       | core functions work in piped workflow
-- |  1       | core functions work in piped workflow
-\ |  2       | core functions work in piped workflow
-| |  3       | core functions work in piped workflow
-/ |  4       | core functions work in piped workflow
-- |  5       | core functions work in piped workflow
-\ |  6       | core functions work in piped workflow
-v |  6       | core functions work in piped workflow [0.9 s]
+/ |   0       | core functions work in piped workflow
+- |   1       | core functions work in piped workflow
+| |   3       | core functions work in piped workflow
+- |   5       | core functions work in piped workflow
+\ |   6       | core functions work in piped workflow
+v |   6       | core functions work in piped workflow [0.6 s]
 ## 
-/ |  0       | core functions return expected errors and messages
-- |  1       | core functions return expected errors and messages
-\ |  2       | core functions return expected errors and messages
-| |  3       | core functions return expected errors and messages
-/ |  4       | core functions return expected errors and messages
-- |  5       | core functions return expected errors and messages
-\ |  6       | core functions return expected errors and messages
-| |  7       | core functions return expected errors and messages
-v |  7       | core functions return expected errors and messages
+/ |   0       | core functions return expected errors and messages
+v |   7       | core functions return expected errors and messages
 ## 
-/ |  0       | core functions return expected structures and values
-- |  1       | core functions return expected structures and values
-\ |  2       | core functions return expected structures and values
-| |  3       | core functions return expected structures and values
-/ |  4       | core functions return expected structures and values
-- |  5       | core functions return expected structures and values
-\ |  6       | core functions return expected structures and values
-| |  7       | core functions return expected structures and values
-/ |  8       | core functions return expected structures and values
-v |  8       | core functions return expected structures and values [2.0 s]
+/ |   0       | core functions return expected structures and values
+- |   1       | core functions return expected structures and values
+| |   3       | core functions return expected structures and values
+- |   5       | core functions return expected structures and values
+\ |   6       | core functions return expected structures and values
+v |   6       | core functions return expected structures and values [2.1 s]
 ## 
-/ |  0       | internal statistical functions return expected values
-- |  1       | internal statistical functions return expected values
-\ |  2       | internal statistical functions return expected values
-| |  3       | internal statistical functions return expected values
-/ |  4       | internal statistical functions return expected values
-- |  5       | internal statistical functions return expected values
-\ |  6       | internal statistical functions return expected values
-| |  7       | internal statistical functions return expected values
-/ |  8       | internal statistical functions return expected values
-- |  9       | internal statistical functions return expected values
-\ | 10       | internal statistical functions return expected values
-| | 11       | internal statistical functions return expected values
-v | 11       | internal statistical functions return expected values [0.8 s]
+/ |   0       | internal statistical functions return expected values
+- |   1       | internal statistical functions return expected values
+\ |   2       | internal statistical functions return expected values
+| |   3       | internal statistical functions return expected values
+- |   5       | internal statistical functions return expected values
+v |  11       | internal statistical functions return expected values [1.3 s]
 ## 
-## == Results ==========================================================================================
-## Duration: 3.8 s
+## == Results =============================================================================
+## Duration: 4.2 s
 ## 
-## OK:       32
+## OK:       30
 ## Failed:   0
 ## Warnings: 0
 ## Skipped:  0
