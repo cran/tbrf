@@ -1,3 +1,9 @@
+# tbrf 0.1.4
+
+## Bug fixes
+
+* lubridate 1.7.4.9000 now assumes year and month durations are 365.25 days in a year (#12). tbrf now uses date intervals and periods to calculate date windows.
+
 # tbrf 0.1.3
 
 ## Bug fixes
@@ -8,7 +14,7 @@
 
 ## Bug fixes
 
-* dplyr 0.8.0rc introduced breaking changes. Evaluation errors are now properly fixed with the expected realese version.
+* dplyr 0.8.0rc introduced breaking changes. Evaluation errors are now properly fixed with the expected release version.
 
 # tbrf 0.1.1
 
@@ -18,4 +24,4 @@
 
 # tbrf 0.1.0
 
-* Intial release.
+* Initial release.
