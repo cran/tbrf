@@ -36,6 +36,7 @@ tbr_gmean <- function(.tbl, x, tcolumn, unit = "years", n, ...) {
 
   default_dots <- list(conf = NA,
                        na.rm = FALSE,
+                       zero.propagate = FALSE,
                        type = "basic",
                        R = 1000,
                        parallel = "no",
@@ -55,12 +56,13 @@ tbr_gmean <- function(.tbl, x, tcolumn, unit = "years", n, ...) {
                                          i = .x,
                                          conf = default_dots$conf,
                                          na.rm = default_dots$na.rm,
+                                         zero.propagate = default_dots$zero.propagate,
                                          type = default_dots$type,
                                          R = default_dots$R,
                                          parallel = default_dots$parallel,
                                          ncpus = default_dots$ncpus,
                                          cl = default_dots$cl))) %>%
-    tidyr::unnest(.data$temp)
+    tidyr::unnest("temp")
   .tbl <- tibble::as_tibble(.tbl)
   return(.tbl)
 }
@@ -124,11 +126,16 @@ tbr_gmean_window <- function(x, tcolumn, unit = "years", n, i, ...) {
     else{
 
       if (is.na(dots$conf)) {
-        results <- tibble::as_tibble(list(mean = gm_mean_ci(window = window, ...)))
+        results <- tibble::as_tibble(list(mean = gm_mean_ci(window = window,
+                                                            conf = NA,
+                                                            na.rm = dots$na.rm,
+                                                            zero.propagate = dots$zero.propagate)))
       }
 
       else {
-        results <- tibble::as_tibble(as.list(gm_mean_ci(window = window, ...)))
+        results <- tibble::as_tibble(as.list(gm_mean_ci(window = window,
+                                                        na.rm = dots$na.rm,
+                                                        zero.propagate = dots$zero.propagate)))
       }
 
       return(results)
@@ -178,15 +185,17 @@ gm_mean <- function(x, na.rm=TRUE, zero.propagate = FALSE){
 #'   calculating the bootstrapped CI
 #' @param na.rm logical \code{TRUE/FALSE}. Remove NAs from the dataset. Defaults
 #'   \code{TRUE}
+#' @param zero.propagate logical \code{TRUE/FALSE} Allows the optional propagation of
+#'   zeros.
 #' @param type character string, one of \code{c("norm","basic", "stud", "perc",
-#'   "bca")}. \code{"all"} is not a valid value. See \code{\link{boot.ci}}
-#' @param R the number of bootstrap replicates. see \code{\link{boot}}
+#'   "bca")}. \code{"all"} is not a valid value. See \code{\link[boot]{boot.ci}}
+#' @param R the number of bootstrap replicates. see \code{\link[boot]{boot}}
 #' @param parallel The type of parallel operation to be used (if any). see
-#'   \code{\link{boot}}
+#'   \code{\link[boot]{boot}}
 #' @param ncpus integer: number of process to be used in parallel operation. see
-#'   \code{\link{boot}}
+#'   \code{\link[boot]{boot}}
 #' @param cl optional parallel or snow cluster for use if \code{parallel =
-#'   "snow"}. see \code{\link{boot}}
+#'   "snow"}. see \code{\link[boot]{boot}}
 #'
 #' @return named list with geometric mean and (optionally) specified confidence
 #'   interval
@@ -197,11 +206,13 @@ gm_mean <- function(x, na.rm=TRUE, zero.propagate = FALSE){
 #' @keywords internal
 gm_mean_ci <- function(window, conf = 0.95, na.rm = TRUE, type = "basic",
                        R = 1000, parallel = "no", ncpus = getOption("boot.ncpus", 1L),
-                       cl = NULL) {
+                       cl = NULL, zero.propagate = FALSE) {
 
   ## if conf is.na return just the gm_mean
   if (is.na(conf)) {
-    results <- c(mean = gm_mean(window))
+    results <- c(mean = gm_mean(window, 
+                                na.rm = na.rm, 
+                                zero.propagate = zero.propagate))
   }
   ## else return gm_mean + conf intervals
 
@@ -209,7 +220,7 @@ gm_mean_ci <- function(window, conf = 0.95, na.rm = TRUE, type = "basic",
 
     ## type must be one of "norm", "basic", "stud", "perc", "bca"
     gmboot <- boot::boot(window, function(x,i) {
-      gm <- gm_mean(x[i], na.rm = na.rm)
+      gm <- gm_mean(x[i], na.rm = na.rm, zero.propagate = zero.propagate)
       n <- length(i)
       v <- (n - 1) * stats::var(x[i]) / n^2
       c(gm, v)

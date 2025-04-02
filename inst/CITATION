@@ -1,0 +1,11 @@
+
+
+bibentry(
+  bibtype  = "manual",
+  title    = "{tbrf}: Time Based Rolling Functions",
+  author   = c(person(given = "Michael", family = "Schramm", email = "mpschramm@gmail.com")),
+  year     = "2020",
+  url = "https://CRAN.R-project.org/package=tbrf",
+  doi = "10.5281/zenodo.3727319",
+  header = "To cite tbrf in publications use:"
+)

@@ -31,7 +31,7 @@ df <- data_frame(date = sample(seq(as.Date('2000-01-01'),
   arrange(date) %>%
   mutate(value = 1:50)
 
-## ---- fig.width=7-------------------------------------------------------------
+## ----fig.width=7--------------------------------------------------------------
 df %>%
   tbr_misc(x = value, tcolumn = date, unit = "years", n = 5, func = length) %>%
   ggplot() +

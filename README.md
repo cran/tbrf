@@ -1,19 +1,26 @@
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # tbrf
 
+<!-- badges: start -->
+
+[![lifecycle](https://img.shields.io/badge/lifecycle-retired-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#retired)
+
 [![CRAN
 version](https://www.r-pkg.org/badges/version/tbrf)](https://CRAN.R-project.org/package=tbrf)
-[![Travis build
-status](https://travis-ci.org/mps9506/tbrf.svg?branch=master)](https://travis-ci.org/mps9506/tbrf)
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/mps9506/tbrf?branch=master&svg=true)](https://ci.appveyor.com/project/mps9506/tbrf)
+[![R build
+status](https://github.com/mps9506/tbrf/workflows/R-CMD-check/badge.svg)](https://github.com/mps9506/tbrf/actions)
 [![Coverage
-status](https://codecov.io/gh/mps9506/tbrf/branch/master/graph/badge.svg)](https://codecov.io/github/mps9506/tbrf?branch=master)
-
+status](https://codecov.io/gh/mps9506/tbrf/branch/master/graph/badge.svg)](https://app.codecov.io/github/mps9506/tbrf?branch=master)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+<!-- badges: end -->
+
+tbrf is retired. I will maintain the package to ensure it remains on
+CRAN but do not expect additional functionality or improvements. I
+highly recommend [runner](https://gogonzo.github.io/runner/) for the
+same functionality but faster!
 
 The goal of tbrf is to provide time-window based rolling statistical
 functions. The package differs from other rolling statistic packages
@@ -38,32 +45,28 @@ the rolling statistical measure.
 
 tbrf is available on CRAN:
 
-``` r
-install.packages("tbrf")
-```
+    install.packages("tbrf")
 
 The development version is maintained on github and can be installed as:
 
-``` r
-install.packages(remotes)
-remotes::install_github("mps9506/tbrf")
-```
+    install.packages(remotes)
+    remotes::install_github("mps9506/tbrf")
 
 ## Available Functions
 
-  - `tbr_binom`: Rolling binomial probability with confidence intervals.
+-   `tbr_binom`: Rolling binomial probability with confidence intervals.
 
-  - `tbr_gmean`: Rolling geometric mean with confidence intervals.
+-   `tbr_gmean`: Rolling geometric mean with confidence intervals.
 
-  - `tbr_mean`: Rolling mean with confidence intervals.
+-   `tbr_mean`: Rolling mean with confidence intervals.
 
-  - `tbr_median`: Rolling median with confidence intervals.
+-   `tbr_median`: Rolling median with confidence intervals.
 
-  - `tbr_misc`: Accepts user specified function.
+-   `tbr_misc`: Accepts user specified function.
 
-  - `tbr_sd`: Rolling standard deviation.
+-   `tbr_sd`: Rolling standard deviation.
 
-  - `tbr_sum`: Rolling sum.
+-   `tbr_sum`: Rolling sum.
 
 ## Usage
 
@@ -75,37 +78,33 @@ See:
 
 Plot a rolling 1-hour mean:
 
-``` r
-library(tbrf)
-library(dplyr)
-library(ggplot2)
-library(ggalt)
+    library(tbrf)
+    library(dplyr)
+    library(ggplot2)
+    library(ggalt)
 
-y = 3 * sin(2 * seq(from = 0, to = 4*pi, length.out = 100)) + rnorm(100)
-time = sample(seq(as.POSIXct(strptime("2017-01-01 00:01:00", "%Y-%m-%d %H:%M:%S")),
-                  as.POSIXct(strptime("2017-01-01 23:00:00", "%Y-%m-%d %H:%M:%S")),
-                  by = "min"), 100)
+    y = 3 * sin(2 * seq(from = 0, to = 4*pi, length.out = 100)) + rnorm(100)
+    time = sample(seq(as.POSIXct(strptime("2017-01-01 00:01:00", "%Y-%m-%d %H:%M:%S")),
+                      as.POSIXct(strptime("2017-01-01 23:00:00", "%Y-%m-%d %H:%M:%S")),
+                      by = "min"), 100)
 
-df <- data_frame(y, time)
+    df <- tibble(y, time)
 
-df %>%
-  tbr_mean(y, time, "hours", n = 1) %>%
-  ggplot() +
-  geom_point(aes(time, y)) +
-  geom_step(aes(time, mean))
-```
+    df %>%
+      tbr_mean(y, time, "hours", n = 1) %>%
+      ggplot() +
+      geom_point(aes(time, y)) +
+      geom_step(aes(time, mean))
 
 <img src="man/figures/README-tbr_hour-1.png" width="672" />
 
 Plot a rolling 3-hour mean:
 
-``` r
-df %>%
-  tbr_mean(y, time, "hours", n = 3) %>%
-  ggplot() +
-  geom_point(aes(time, y)) +
-  geom_step(aes(time, mean))
-```
+    df %>%
+      tbr_mean(y, time, "hours", n = 3) %>%
+      ggplot() +
+      geom_point(aes(time, y)) +
+      geom_step(aes(time, mean))
 
 <img src="man/figures/README-tbr_threehour-1.png" width="672" />
 
@@ -119,29 +118,45 @@ By participating in this project you agree to abide by its terms.
 
 tbrf code is released under GPL-3 | LICENSE.md
 
-`binom_ci()` is an implementation of code licensed under GPL (\>=2) by
+`binom_ci()` is an implementation of code licensed under GPL (&gt;=2) by
 Frank Harrell’s [`Hmisc`](https://github.com/harrelfe/Hmisc) package.
+
+If you can cite the use of this software, please use `citation("tbrf")`
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3727319.svg)](https://doi.org/10.5281/zenodo.3727319)
 
 ## Test Results
 
-``` r
-library(tbrf)
+    library(tbrf)
 
-date()
-## [1] "Tue Mar 24 07:45:05 2020"
+    date()
+    ## [1] "Wed Apr  2 14:49:27 2025"
 
-devtools::test()
-## v |  OK F W S | Context
-## / |   0       | core functions work in piped workflow- |   1       | core functions work in piped workflow- |   5       | core functions work in piped workflowv |   6       | core functions work in piped workflow [0.3 s]
-## / |   0       | core functions return expected errors and messagesv |   7       | core functions return expected errors and messages
-## / |   0       | core functions return expected structures and values\ |   2       | core functions return expected structures and values- |   5       | core functions return expected structures and values\ |   6       | core functions return expected structures and valuesv |   6       | core functions return expected structures and values [1.1 s]
-## / |   0       | internal statistical functions return expected values| |   3       | internal statistical functions return expected values- |   5       | internal statistical functions return expected valuesv |  11       | internal statistical functions return expected values [0.3 s]
-## 
-## == Results ===================================================================================================
-## Duration: 1.8 s
-## 
-## OK:       30
-## Failed:   0
-## Warnings: 0
-## Skipped:  0
-```
+    devtools::test()
+    ## ✔ | F W  S  OK | Context
+    ## 
+    ## ⠏ |          0 | expectedClass                                                  
+    ## ⠏ |          0 | core functions work in piped workflow                          
+    ## ⠼ |          5 | core functions work in piped workflow                          
+    ## ✔ |          6 | core functions work in piped workflow
+    ## 
+    ## ⠏ |          0 | expectedMessages                                               
+    ## ⠏ |          0 | core functions return expected errors and messages             
+    ## ⠹ |          3 | core functions return expected errors and messages             
+    ## ⠦ |          7 | core functions return expected errors and messages             
+    ## ✔ |          7 | core functions return expected errors and messages
+    ## 
+    ## ⠏ |          0 | expectedValues                                                 
+    ## ⠏ |          0 | core functions return expected structures and values           
+    ## ⠼ |          5 | core functions return expected structures and values           
+    ## ⠴ |          6 | core functions return expected structures and values           
+    ## ✔ |          6 | core functions return expected structures and values
+    ## 
+    ## ⠏ |          0 | internalStatsFunctions                                         
+    ## ⠏ |          0 | internal statistical functions return expected values          
+    ## ⠼ |          5 | internal statistical functions return expected values          
+    ## ✔ |         17 | internal statistical functions return expected values
+    ## 
+    ## ══ Results ═════════════════════════════════════════════════════════════════════
+    ## Duration: 1.0 s
+    ## 
+    ## [ FAIL 0 | WARN 0 | SKIP 0 | PASS 36 ]
